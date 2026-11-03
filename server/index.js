@@ -8,6 +8,7 @@ const projects = require("./data/projects");
 const ur = require("./data/ur");
 
 const app = express();
+const api = express.Router();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
@@ -25,16 +26,16 @@ function localizeProject(project, lang) {
   return lang === "ur" ? { ...base, ...(ur.projects[project.slug] || {}) } : base;
 }
 
-app.get("/api/health", (req, res) => res.json({ ok: true, languages: SUPPORTED }));
+api.get("/health", (req, res) => res.json({ ok: true, languages: SUPPORTED }));
 
-app.get("/api/profile", (req, res) => res.json(localizeProfile(getLang(req))));
+api.get("/profile", (req, res) => res.json(localizeProfile(getLang(req))));
 
-app.get("/api/projects", (req, res) => {
+api.get("/projects", (req, res) => {
   const lang = getLang(req);
   res.json(projects.map((p) => localizeProject(p, lang)));
 });
 
-app.get("/api/projects/:slug", (req, res) => {
+api.get("/projects/:slug", (req, res) => {
   const lang = getLang(req);
   const index = projects.findIndex((p) => p.slug === req.params.slug);
   if (index === -1) return res.status(404).json({ error: "Project not found" });
@@ -46,6 +47,10 @@ app.get("/api/projects/:slug", (req, res) => {
     next: index < projects.length - 1 ? brief(projects[index + 1]) : null
   });
 });
+
+// Mounted at /api, and also at / in case the platform strips the /api prefix
+app.use("/api", api);
+app.use("/", api);
 
 // PDF documents live in client/public/docs (generate with: npm run docs)
 // Local / self-hosted: serve them and the React build from this server.
