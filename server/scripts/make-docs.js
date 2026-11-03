@@ -1,5 +1,5 @@
 // Generates the PDF documents: one brief per project + the full portfolio.
-// Run with: npm run docs   (output: server/public/docs)
+// Run with: npm run docs   (output: client/public/docs)
 const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
@@ -7,7 +7,7 @@ const PDFDocument = require("pdfkit");
 const profile = require("../data/profile");
 const projects = require("../data/projects");
 
-const OUT = path.join(__dirname, "..", "public", "docs");
+const OUT = path.join(__dirname, "..", "..", "client", "public", "docs");
 fs.mkdirSync(OUT, { recursive: true });
 
 const NAVY = "#0b1f4b";

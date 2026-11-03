@@ -47,14 +47,23 @@ app.get("/api/projects/:slug", (req, res) => {
   });
 });
 
-// PDF documents (generate with: npm run docs)
-app.use("/docs", express.static(path.join(__dirname, "public", "docs")));
+// PDF documents live in client/public/docs (generate with: npm run docs)
+// Local / self-hosted: serve them and the React build from this server.
+// On Vercel the client service serves both, so this is skipped there.
+if (!process.env.VERCEL) {
+  const docsDir = path.join(__dirname, "..", "client", "public", "docs");
+  app.use("/docs", express.static(docsDir));
 
-// Production: serve the React build
-const clientDist = path.join(__dirname, "..", "client", "dist");
-if (fs.existsSync(clientDist)) {
-  app.use(express.static(clientDist));
-  app.get(/^\/(?!api|docs).*/, (req, res) => res.sendFile(path.join(clientDist, "index.html")));
+  const clientDist = path.join(__dirname, "..", "client", "dist");
+  if (fs.existsSync(clientDist)) {
+    app.use(express.static(clientDist));
+    app.get(/^\/(?!api|docs).*/, (req, res) => res.sendFile(path.join(clientDist, "index.html")));
+  }
 }
 
-app.listen(PORT, () => console.log(`DotPro portfolio server running on http://localhost:${PORT}`));
+// Vercel imports the app; locally we start the listener.
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`DotPro portfolio server running on http://localhost:${PORT}`));
+}
+
+module.exports = app;
