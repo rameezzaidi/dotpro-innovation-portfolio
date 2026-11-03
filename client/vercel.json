@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://dotpro-innovation-portfolio-foqa.vercel.app/api/:path*"
+    },
+    {
+      "source": "/((?!docs/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
