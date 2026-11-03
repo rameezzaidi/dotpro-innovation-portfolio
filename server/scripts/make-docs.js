@@ -115,7 +115,15 @@ projects.forEach((p) => {
   bullets(doc, p.features);
 
   heading(doc, `Modules in Detail (${p.modules.length})`);
+  let lastGroup = "";
   p.modules.forEach((m, i) => {
+    if (m.group && m.group !== lastGroup) {
+      lastGroup = m.group;
+      ensure(doc, 80);
+      doc.moveDown(0.3);
+      doc.font("Helvetica-Bold").fontSize(9.5).fillColor(p.accent).text(m.group.toUpperCase(), MARGIN, doc.y, { characterSpacing: 0.8 });
+      doc.moveDown(0.35);
+    }
     ensure(doc, 56);
     doc.font("Helvetica-Bold").fontSize(11.5).fillColor(NAVY).text(`${i + 1}. ${m.name}`, MARGIN, doc.y, { width: width(doc) });
     doc.font("Helvetica").fontSize(10.5).fillColor(INK).text(m.desc, MARGIN + 16, doc.y + 1, { width: width(doc) - 16, lineGap: 2 });

@@ -32,6 +32,19 @@ export default function ProjectDetail({ profile }) {
   const { project, prev, next } = data;
   const wa = whatsappLink(profile.whatsappNumber, t("waProject", { title: project.title }));
 
+  // Group modules when they carry a `group` (e.g. FlowHCM menu sections); numbering stays continuous.
+  const numbered = project.modules.map((m, i) => ({ ...m, no: i + 1 }));
+  const sections = [];
+  numbered.forEach((m) => {
+    const key = m.group || "";
+    let section = sections[sections.length - 1];
+    if (!section || section.group !== key) {
+      section = { group: key, items: [] };
+      sections.push(section);
+    }
+    section.items.push(m);
+  });
+
   return (
     <article style={{ "--accent": project.accent }}>
       <section className="detail-hero">
@@ -116,15 +129,24 @@ export default function ProjectDetail({ profile }) {
             <h2>{t("modulesTitle")}</h2>
             <span className="chip chip-accent">{t("modulesCount", { n: project.modules.length })}</span>
           </div>
-          <div className="grid grid-3 modules">
-            {project.modules.map((m, i) => (
-              <div key={m.name} className="module">
-                <span className="module-no">{String(i + 1).padStart(2, "0")}</span>
-                <h3>{m.name}</h3>
-                <p className="muted">{m.desc}</p>
+          {sections.map((section) => (
+            <div key={section.group || "all"} className="module-section">
+              {section.group && (
+                <h3 className="module-group">
+                  {section.group} <span>{section.items.length}</span>
+                </h3>
+              )}
+              <div className="grid grid-3 modules">
+                {section.items.map((m) => (
+                  <div key={m.name} className="module">
+                    <span className="module-no">{String(m.no).padStart(2, "0")}</span>
+                    <h3>{m.name}</h3>
+                    <p className="muted">{m.desc}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 

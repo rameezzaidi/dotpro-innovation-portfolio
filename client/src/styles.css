@@ -191,6 +191,9 @@ button { font-family: inherit; }
 .side-links { display: flex; gap: 1.2rem; margin-top: 1rem; font-size: .88rem; font-weight: 600; color: var(--navy-2); }
 .side-links a { display: inline-flex; gap: .35rem; align-items: center; }
 .modules { gap: 1.1rem; }
+.module-section + .module-section { margin-top: 2.2rem; }
+.module-group { display: flex; align-items: center; gap: .6rem; font-size: 1.05rem; margin: 0 0 .9rem; padding-bottom: .5rem; border-bottom: 2px solid color-mix(in srgb, var(--accent) 25%, white); }
+.module-group span { font-family: var(--mono); font-size: .75rem; font-weight: 600; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, white); padding: .1rem .5rem; border-radius: 999px; }
 .module { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.3rem 1.3rem 1.1rem; position: relative; transition: border-color .2s, transform .2s; }
 .module:hover { border-color: var(--accent); transform: translateY(-3px); }
 .module-no { display: inline-block; font-family: var(--mono); font-size: .78rem; font-weight: 600; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, white); padding: .15rem .5rem; border-radius: 6px; margin-bottom: .6rem; }
